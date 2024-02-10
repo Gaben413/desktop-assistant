@@ -1,10 +1,19 @@
 <script setup>
 // This starter template is using Vue 3 <script setup> SFCs
 // Check out https://vuejs.org/api/sfc-script-setup.html#script-setup
+import { onBeforeUnmount, onMounted } from "vue";
 import Greet from "./components/Greet.vue";
+import HomeView from "./views/HomeView.vue";
+
+let this_is_data = "Some data";
+
+onMounted(() => {
+  console.log("Mounted");
+})
 </script>
 
 <template>
+  <!--
   <div class="container">
     <h1>Welcome to Tauri!</h1>
 
@@ -39,6 +48,11 @@ import Greet from "./components/Greet.vue";
 
     <Greet />
   </div>
+  -->
+
+  <HomeView />
+  <p>{{ this_is_data }}</p>
+
 </template>
 
 <style scoped>
