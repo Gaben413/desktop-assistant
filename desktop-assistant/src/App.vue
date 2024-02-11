@@ -51,7 +51,6 @@ onMounted(() => {
   -->
 
   <HomeView />
-  <p>{{ this_is_data }}</p>
 
 </template>
 

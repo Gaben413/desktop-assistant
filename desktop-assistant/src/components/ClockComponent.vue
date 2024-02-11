@@ -1,9 +1,9 @@
 <template>
     <div class="clock-container">
-        <h3>Clock {{ this.time_zone_data.city_name }}</h3>
+        <h3>{{ this.time_zone_data.city_name }}</h3>
         <h3>({{ this.time_zone_data.tz_name }})</h3>
-        <p>{{ this.display_time }}</p>
-        <p>{{ this.time_zone_data.tz_code }}</p>
+        <p class="bigger-p">{{ this.display_time }}</p>
+        <p class="smaller-p">{{ this.time_zone_data.tz_code }}</p>
     </div>
     
 </template>
@@ -46,7 +46,7 @@
         },
         beforeCreate(){
             this.intervalLoop = setInterval(() => {
-                console.log("Fetch Time Loop");
+                //console.log("Fetch Time Loop");
                 //console.log(this.time_zone_data)
                 
                 this.display_time = new Date().toLocaleTimeString("pt-BR", {timeZone: this.time_zone_data.tz_code}).toString()
@@ -60,12 +60,23 @@
 
 <style>
     .clock-container{
-        border-style: dashed;
+        padding: 10px;
         border-radius: 15px;
         
-        margin: 5px;
-        padding: 10px;
+        background: linear-gradient(0deg, rgba(127,255,212,1) 0%, rgba(255,245,150,1) 100%);;
 
         text-align: center;
+    }
+    .clock-container > h3{
+        margin: 0px;
+    }
+    .bigger-p{
+        font-size: 25px;
+        margin-bottom: 5px;
+    }
+    .smaller-p{
+        font-size: 10px;
+        font-style: italic;
+        font-weight: bold;
     }
 </style>

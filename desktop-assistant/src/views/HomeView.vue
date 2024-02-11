@@ -21,6 +21,37 @@
         </div>
     </div>
 
+    <div id="rate-exchanger">
+        <div id="left-exchange" class="re-slots">
+            <h3>Currency 1</h3>
+            <select name="" id="currency1">
+                <option value="USD">USD</option>
+                <option value="BRL">BRL</option>
+                <option value="EUR">EUR</option>
+            </select>
+            <label>USD: </label>
+            <input type="number" step=".01" class="currency-input">
+        </div>
+
+        <div id="mid-exchange" class="re-slots">
+            <h3>=></h3>
+        </div>
+
+        <div id="right-exchange" class="re-slots">
+            <h3>Currency 2</h3>
+            <select name="" id="currency2">
+                <option value="USD">USD</option>
+                <option value="BRL">BRL</option>
+                <option value="EUR">EUR</option>
+            </select>
+            <label>USD: </label>
+            <input type="number" step=".01" class="currency-input">
+        </div>
+
+        <button @click="rate_exchange">Change</button>
+
+    </div>
+
 </template>
 
 <script setup>
@@ -50,9 +81,53 @@
         clearInterval(intervalLoop);
     })
     */
+
+   function rate_exchange(){
+    console.log("Exchange");
+   }
 </script>
 
 <style>
+    #rate-exchanger{
+        border-style: dashed;
+        display: flex;
+    }
+    .re-slots{
+        text-align: center;
+        padding: 10px;
+
+        border-radius: 25px;
+    }
+    #left-exchange{
+        
+        background-color: red;
+        
+    }
+    #mid-exchange{
+        
+        padding-top: 5%;
+        
+        font-size: 25px;
+        background-color: gray;
+        
+    }
+    #right-exchange{
+        background-color: yellow;
+        
+    }
+    #currency1, #currency2{
+        width: 100%;
+        height: 25px;
+
+        border-style: none;
+        border-radius: 15px;
+
+        margin-bottom: 15px;
+    }
+    .currency-input{
+        width: 100px;
+    }
+
     .grid-container{
         display: grid;
 
@@ -60,8 +135,8 @@
 
         justify-content: center;
 
-        column-gap: 15px;
-        row-gap: 15px;
+        column-gap: 5px;
+        row-gap: 5px;
     }
     .grid-cell{
         width: 200px;
