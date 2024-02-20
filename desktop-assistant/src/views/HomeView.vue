@@ -1,5 +1,5 @@
 <template>
-    <h1>Home View</h1>
+    <WeatherComponent />
     <!--
     <h3>Grid Test</h3>
 
@@ -29,6 +29,7 @@
     import { onMounted, onUnmounted } from 'vue';
     import ClockComponent from '../components/ClockComponent.vue';
     import CurrencyComponent from '../components/CurrencyComponent.vue';
+    import WeatherComponent from '../components/WeatherComponent.vue';
 
     import clock_data_json from '../assets/clock_data.json'
 
