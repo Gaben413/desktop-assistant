@@ -1,7 +1,6 @@
 <template>
-        <div id="rate-exchanger">
-            
-            <div id="left-exchange" class="re-slots">
+        <div id="c-grid">
+            <div id="left-exchange" class="c-grid-cell">
                 <h3>Slot 1</h3>
                 <select name="" id="currency1" v-model="currency_slot_1" @change="rate_exchange">
                     <option v-for="currency in currencies" :value="currency.value">{{ currency.name }}</option>
@@ -9,16 +8,16 @@
                 <input type="number" step=".01" class="currency-input" v-model="slot1_value" @change="rate_exchange">
             </div>
 
-            <div id="mid-exchange" class="re-slots">
-                <h3>=></h3>
+            <div id="mid-exchange" class="c-grid-cell">
+                <p>=></p>
             </div>
 
-            <div id="right-exchange" class="re-slots">
+            <div id="right-exchange" class=" c-grid-cell">
                 <h3>Slot 2</h3>
                 <select name="" id="currency2" v-model="currency_slot_2" @change="rate_exchange">
                     <option v-for="currency in currencies" :value="currency.value">{{ currency.name }}</option>
                 </select>
-                <label>{{ exchanged_value }}</label>
+                <h2>{{ exchanged_value }}</h2>
                 <!--
                 <input type="number" step=".01" class="currency-input">
                 -->
@@ -27,7 +26,6 @@
             <!--
             <button id="exchange-button" @click="rate_exchange">Change</button>
             -->
-
         </div>
 </template>
 
@@ -76,41 +74,55 @@
 </script>
 
 <style>
-    #rate-exchanger-container{
-        margin: auto;
-        width: 75%;
-        padding: 10px;
+    #c-grid{
+        display: grid;
+
+        grid-template-columns: auto auto auto;
+
+        justify-content: center;
+
+        column-gap: 5px;
+        row-gap: 5px;
     }
-    #rate-exchanger{
-        border-style: dashed;
-        display: flex;
-        width: auto;
-    }
-    .re-slots{
+    .c-grid-cell{
+        width: 200px;
+        height: 150px;
+
         text-align: center;
         padding: 10px;
 
         border-radius: 25px;
-        width: 35%;
-
     }
+    .c-grid-cell > h2{
+        margin-top: 10px;
+    }
+
     #left-exchange{
         
-        background-color: red;
+        background-color: darkgray;
         
     }
     #mid-exchange{
+        
+        width: 50px;
 
-        width: 5%;
-        padding-top: 5%;
+        /* background-color: gray; */
         
+    }
+    #mid-exchange > p{
+        
+        width: 100%;
+
+        padding: 125% 0px;
+        margin: 0px;
+
+        text-align: center;
+
         font-size: 25px;
-        background-color: gray;
-        
     }
     #right-exchange{
 
-        background-color: yellow;
+        background-color: lightgray;
         
     }
     #currency1, #currency2{
@@ -124,6 +136,7 @@
     }
     .currency-input{
         width: 100px;
+        text-align: center;
     }
     #exchange-button{
         background-color: green;
