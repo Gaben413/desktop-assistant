@@ -13,7 +13,7 @@
             <p class="moon-p" v-else-if="moon_phase==4">FULL MOON</p>
         </div>
         <div id="temperature">
-            TEMPERATURE
+            <p class="temperature-p">{{ temperature_data['temperature_c'] }}</p>
         </div>
     </div>
     
@@ -26,6 +26,7 @@
 
         data(){
             return{
+                //SEASONS
                 season: function(){
 
                     let current_day = new Date().getDate()
@@ -50,17 +51,18 @@
                         return 4;
                     } 
                 },
-                moon_phase: 1
+                moon_phase: 1,
+                temperature_data: {}
             }
         },
         async created() {
-            
+            //MOON PHASES
             let moon_data = await this.get_data();
 
             let result = moon_data.find(data => data.day == new Date().getDate())
 
-            console.log("Let's go")
-            console.log(result)
+            //console.log("Let's go")
+            //console.log(result)
 
             if(result['phase'] == 'Last Quarter'){
                 this.moon_phase = 1
@@ -72,51 +74,90 @@
                 this.moon_phase = 4
             }
 
+            //TEMPERATURE
+            let geolocation = await this.get_geolocation();
+            console.log(geolocation)
+
+            this.temperature_data = await this.get_temperature_data(geolocation);
+            console.log(this.temperature_data)
+
         },
         methods: {
             get_data: async() => {
 
-            let current_month = new Date().getMonth()+1
-            let current_year = new Date().getFullYear()
-            let month_days = new Date(current_year, current_month, 0).getDate()
+                let current_month = new Date().getMonth()+1
+                let current_year = new Date().getFullYear()
+                let month_days = new Date(current_year, current_month, 0).getDate()
 
-            const response = await fetch('https://aa.usno.navy.mil/api/moon/phases/year?year=2024', {
-                method: 'GET',
-                timeout: 30,
-            });
+                const response = await fetch(`https://aa.usno.navy.mil/api/moon/phases/year?year=${current_year}`, {
+                    method: 'GET',
+                    timeout: 30,
+                });
 
-            let obj_array = response['data']['phasedata'].filter(o => o.month == current_month);
+                let obj_array = response['data']['phasedata'].filter(o => o.month == current_month);
 
-            console.log(obj_array)
+                //console.log(obj_array)
 
-            let index_check = 0;
+                let index_check = 0;
 
-            let days_obj = [];
+                let days_obj = [];
 
-            for (let i = 0; i < month_days; i++) {
+                for (let i = 0; i < month_days; i++) {
 
-                let today_data = obj_array.find(date => date.day == (i+1))
+                    let today_data = obj_array.find(date => date.day == (i+1))
 
-                if(today_data != undefined && today_data['phase'] != obj_array[index_check]['phase']
-                || (obj_array[index_check]['phase'] == "New Moon" || obj_array[index_check]['phase'] == "Full Moon")){
-                    index_check++;
+                    if(today_data != undefined && today_data['phase'] != obj_array[index_check]['phase']
+                    || (obj_array[index_check]['phase'] == "New Moon" || obj_array[index_check]['phase'] == "Full Moon")){
+                        index_check++;
+                    }
+
+                    if(index_check == obj_array.length) index_check = 0;
+
+                    let phase = obj_array[index_check]['phase'];
+
+                    days_obj.push({
+                        day: (i+1),
+                        phase: phase
+                    })
+
                 }
 
-                if(index_check == obj_array.length) index_check = 0;
+                //console.log(days_obj);
 
-                let phase = obj_array[index_check]['phase'];
+                return days_obj
 
-                days_obj.push({
-                    day: (i+1),
-                    phase: phase
+            },
+
+            get_geolocation: async () => {
+                return new Promise(async (resolve, reject)=>{
+                    navigator.geolocation.getCurrentPosition((position) => {
+                        resolve({
+                            latitude: position.coords.latitude,
+                            longitude: position.coords.longitude
+                        })
+
+                    })
                 })
+                
+            },
+            get_temperature_data: async (geolocation) => {
+                const response_raw = 
+                    await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${geolocation.latitude}&longitude=${geolocation.longitude}&current=temperature_2m,relative_humidity_2m,is_day,precipitation,rain,cloud_cover`, {
+                        method: 'GET',
+                        timeout: 30,
+                    });
 
-            }
+                let response = {
+                    temperature_c: response_raw['data']['current']['temperature_2m'] + "°C",
+                    temperature_f: ((response_raw['data']['current']['temperature_2m']*(9/5))+32) + "°F",
+                    humidity: response_raw['data']['current']['relative_humidity_2m'] + "%",
+                    is_day: response_raw['data']['current']['is_day'] == 1,
+                    cloud_cover: response_raw['data']['current']['cloud_cover'] + "%",
+                    precipitation: response_raw['data']['current']['precipitation'] + "mm",
+                    rain: response_raw['data']['current']['rain'] + "mm"
+                }
 
-            console.log(days_obj);
-
-            return days_obj
-
+                return response
             }
         }
     }
@@ -136,6 +177,9 @@
         margin: 0;
     }
     .moon-p{
+        margin: 0;
+    }
+    .temperature-p{
         margin: 0;
     }
 </style>
