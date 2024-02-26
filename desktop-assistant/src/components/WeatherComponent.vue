@@ -7,10 +7,16 @@
             <p class="season-p" v-else-if="season()==4">WINTER</p>
         </div>
         <div id="moon">
+            <!--
             <p class="moon-p" v-if="moon_phase==1">LAST QUARTER</p>
             <p class="moon-p" v-else-if="moon_phase==2">NEW MOON</p>
             <p class="moon-p" v-else-if="moon_phase==3">FIRST QUARTER</p>
             <p class="moon-p" v-else-if="moon_phase==4">FULL MOON</p>
+            -->
+            <img src="../assets/moon_phases/Last Quarter.svg" alt="" class="moon-svg" v-if="moon_phase==1">
+            <img src="../assets/moon_phases/New Moon.svg" alt="" class="moon-svg" v-else-if="moon_phase==2">
+            <img src="../assets/moon_phases/First Quarter.svg" alt="" class="moon-svg" v-else-if="moon_phase==3">
+            <img src="../assets/moon_phases/Full Moon.svg" alt="" class="moon-svg" v-else-if="moon_phase==4">
         </div>
         <div id="temperature">
             <p class="temperature-p">{{ temperature_data['temperature_c'] }}</p>
@@ -169,7 +175,7 @@
 
         grid-template-columns: auto auto auto;
 
-        justify-content: center;
+        /*justify-content: center;*/
 
         justify-content: space-between;
     }
@@ -181,5 +187,9 @@
     }
     .temperature-p{
         margin: 0;
+    }
+
+    .moon-svg{
+        width: 30px;
     }
 </style>

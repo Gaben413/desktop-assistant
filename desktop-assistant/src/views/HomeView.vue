@@ -14,7 +14,13 @@
         <div class="grid-cell cell-4"></div>
     </div>
     -->
+
+    <TimerComponent />
+
+    <!--
     <h2 style="text-align: center;">Clocks</h2>
+    -->
+    
     <div class="grid-container">
         <div v-for="clock_data in clock_data_array" class="grid-cell">
             <ClockComponent :time_zone_data=clock_data :key="clock_data.id" />
@@ -30,6 +36,7 @@
     import ClockComponent from '../components/ClockComponent.vue';
     import CurrencyComponent from '../components/CurrencyComponent.vue';
     import WeatherComponent from '../components/WeatherComponent.vue';
+    import TimerComponent from '../components/TimerComponent.vue';
 
     import clock_data_json from '../assets/clock_data.json'
 
