@@ -1,33 +1,22 @@
 <template>
-    <WeatherComponent />
-    <!--
-    <h3>Grid Test</h3>
+    <div id="home-grid">
+        <SystemDataComponent />
+        
+        <div>
+            <WeatherComponent />
 
-    <div class="grid-container">
-        <div class="grid-cell cell-1"></div>
-        <div class="grid-cell cell-2"></div>
-        <div class="grid-cell cell-3"></div>
-        <div class="grid-cell cell-4"></div>
-        <div class="grid-cell cell-1"></div>
-        <div class="grid-cell cell-2"></div>
-        <div class="grid-cell cell-3"></div>
-        <div class="grid-cell cell-4"></div>
-    </div>
-    -->
+            <TimerComponent />
+            
+            <div class="grid-container">
+                <div v-for="clock_data in clock_data_array" class="grid-cell">
+                    <ClockComponent :time_zone_data=clock_data :key="clock_data.id" />
+                </div>
+            </div>
 
-    <TimerComponent />
-
-    <!--
-    <h2 style="text-align: center;">Clocks</h2>
-    -->
-    
-    <div class="grid-container">
-        <div v-for="clock_data in clock_data_array" class="grid-cell">
-            <ClockComponent :time_zone_data=clock_data :key="clock_data.id" />
+            <CurrencyComponent />
         </div>
     </div>
-
-    <CurrencyComponent />
+    
 
 </template>
 
@@ -37,6 +26,7 @@
     import CurrencyComponent from '../components/CurrencyComponent.vue';
     import WeatherComponent from '../components/WeatherComponent.vue';
     import TimerComponent from '../components/TimerComponent.vue';
+    import SystemDataComponent from '../components/SystemDataComponent.vue';
 
     import clock_data_json from '../assets/clock_data.json'
 
@@ -93,5 +83,11 @@
     }
     .cell-4{
         background-color: yellow;
+    }
+
+    #home-grid{
+        display: grid;
+
+        grid-template-columns: 112px auto;
     }
 </style>
