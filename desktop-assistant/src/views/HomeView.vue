@@ -88,6 +88,6 @@
     #home-grid{
         display: grid;
 
-        grid-template-columns: 112px auto;
+        grid-template-columns: 125px auto;
     }
 </style>

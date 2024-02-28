@@ -2,8 +2,8 @@
     <div id="inner-data">
         <div id="ram-display">
             <h3>RAM</h3>
-            <p>{{ ram_used_display }}</p>
-            <p>{{ ram_total_display }}</p>
+            <p>{{ ram_used_display }} / {{ ram_total_display }}</p>
+            <PercentageBarComponent :current_ammount=ram_raw_used :total_ammount=ram_raw_total bar_color="blue" bar_bg_color="#3366ff" />
         </div>
 
         <div id="cpu-display">
@@ -16,11 +16,9 @@
         <div class="disk-display" v-for="disk in disk_data">
             <p>{{ disk['disk_name'] }} | {{ disk['disk_mount_point'] }}</p>
             <p v-if="disk['disk_is_removable']">Removable</p>
-            <p> {{ format_byte(disk['disk_available_space']) }} / {{ format_byte(disk['disk_total_space']) }}</p>
-            <div :style="{'height': '15px', 'width': '100%', 'background-color': 'red'}">
-                <div :style="{'height': '15px', 'width': get_storage_percentage(disk['disk_available_space'],disk['disk_total_space']), 'background-color': 'green'}"></div>
-            </div>
-            <p class="percentage-p">{{ get_storage_percentage(disk['disk_available_space'],disk['disk_total_space']) }}</p>
+
+            <p class="storage-p"> {{ format_byte(disk['disk_available_space']) }} / {{ format_byte(disk['disk_total_space']) }}</p>
+            <PercentageBarComponent :current_ammount=disk.disk_available_space :total_ammount=disk.disk_total_space bar_color="green" bar_bg_color="red" />
 
         </div>
 
@@ -32,23 +30,30 @@
 <script>
     import { invoke } from "@tauri-apps/api/tauri";
 
+    import PercentageBarComponent from "./PercentageBarComponent.vue";
+
     export default{
+        components: {
+            PercentageBarComponent
+        },
         data(){
             return{
                 greetMsg: "",
                 name: "Kay",
+                
+                ram_raw_used: 0,
+                ram_raw_total: 0,
                 ram_used_display: "00GB",
                 ram_total_display: "/00GB RAM",
+
                 cpu_count: 0,
                 cpu_average_usage: 0,
+
                 disk_data: [],
                 desk_percentage: ['25%']
             }
         },
         mounted(){
-
-            console.log("System Data:")
-            
             this.get_system_data()
         },
         methods:{
@@ -57,8 +62,11 @@
                 console.log(json);
                 console.log(json['used_memory']*1e-9);
 
+                this.ram_raw_used = json['used_memory'];
+                this.ram_raw_total = json['total_memory'];
+
                 this.ram_used_display = `${(json['used_memory']*1e-9).toFixed(2)}GB`;
-                this.ram_total_display = `/${(json['total_memory']*1e-9).toFixed(2)}GB`;
+                this.ram_total_display = `${(json['total_memory']*1e-9).toFixed(2)}GB`;
 
                 this.cpu_count = `${json['cpu_count']} cores`;
                 this.cpu_average_usage = `${(json['cpu_average_usage']).toFixed(2)}%`;
@@ -103,6 +111,8 @@
         margin-right: 15px;
 
         padding-left: 5px;
+        padding-right: 5px;
+
     }
 
     h3{
@@ -111,10 +121,12 @@
 
     #ram-display > p{
         margin: 0;
+        font-size: 10px;
     }
 
     #cpu-display > p{
         margin: 0;
+        font-size: 15px;
     }
 
     .disk-display{
@@ -124,12 +136,7 @@
         margin: 0;
     }
 
-    .percentage-p{
-        display: block;
-
-        height: 100%;
-        width: 100%;
-
-        margin: 0;
+    .storage-p{
+        font-size: 10px;
     }
 </style>
