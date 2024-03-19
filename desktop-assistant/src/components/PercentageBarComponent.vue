@@ -27,8 +27,8 @@
 <script>
     export default{
         props: {
-            current_ammount: BigInt,
-            total_ammount: BigInt,
+            current_ammount: Number,
+            total_ammount: Number,
             bar_color: String,
             bar_bg_color: String,
         },

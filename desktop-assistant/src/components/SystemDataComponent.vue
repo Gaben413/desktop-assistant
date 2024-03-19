@@ -10,6 +10,8 @@
             <h3>CPU</h3>
             <p>{{ cpu_count }}</p>
             <p>{{ cpu_average_usage }}</p>
+            <PercentageBarComponent :current_ammount=cpu_percentage :total_ammount=100 bar_color="blue" bar_bg_color="#3366ff" />
+
         </div>
 
         <h3>Storage</h3>
@@ -22,7 +24,9 @@
 
         </div>
 
+        <!--
         <button @click="get_system_data">Reload</button>
+        -->
     </div>
 
 </template>
@@ -38,6 +42,7 @@
         },
         data(){
             return{
+                interval: null,
                 greetMsg: "",
                 name: "Kay",
                 
@@ -48,6 +53,7 @@
 
                 cpu_count: 0,
                 cpu_average_usage: 0,
+                cpu_percentage: 0,
 
                 disk_data: [],
                 desk_percentage: ['25%']
@@ -55,12 +61,21 @@
         },
         mounted(){
             this.get_system_data()
+
+            this.interval = setInterval(() => {
+                console.log("Fetch System Data");
+                this.get_system_data()
+
+            }, 2500);
+        },
+        unmounted(){
+            clearInterval(this.interval);
         },
         methods:{
             async get_system_data(){
                 let json = JSON.parse(await invoke("get_system_data"))
-                console.log(json);
-                console.log(json['used_memory']*1e-9);
+                //console.log(json);
+                //console.log(json['used_memory']*1e-9);
 
                 this.ram_raw_used = json['used_memory'];
                 this.ram_raw_total = json['total_memory'];
@@ -70,6 +85,7 @@
 
                 this.cpu_count = `${json['cpu_count']} cores`;
                 this.cpu_average_usage = `${(json['cpu_average_usage']).toFixed(2)}%`;
+                this.cpu_percentage = json['cpu_average_usage'];
 
                 this.disk_data = json['disk_data'];
                 /*

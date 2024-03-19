@@ -1,8 +1,15 @@
 <template>
     <div id="home-grid">
-        <SystemDataComponent />
+        <div id="side-bar">
+            <SystemDataComponent />
+        </div>
+
+        <div :class="classObject">
+            <h1>Settings</h1>
+            <button id="toggle-button" @click="settings_toggle">Settings</button>
+        </div>
         
-        <div>
+        <div id="main-screen">
             <WeatherComponent />
 
             <TimerComponent />
@@ -21,7 +28,7 @@
 </template>
 
 <script setup>
-    import { onMounted, onUnmounted } from 'vue';
+    import { onMounted, onUnmounted, reactive } from 'vue';
     import ClockComponent from '../components/ClockComponent.vue';
     import CurrencyComponent from '../components/CurrencyComponent.vue';
     import WeatherComponent from '../components/WeatherComponent.vue';
@@ -40,6 +47,12 @@
 
     let intervalLoop;
 
+    let classObject = reactive({
+        settings: true,
+        settings_on: false,
+        settings_off: true
+    })
+
     /*
     onMounted(() => {
         intervalLoop = setInterval(() => {
@@ -52,12 +65,24 @@
     })
     */
 
+    function settings_toggle(){
+        classObject['settings_on'] = !classObject['settings_on'];
+        classObject['settings_off'] = !classObject['settings_off'];
+    }
+
    function rate_exchange(){
     console.log("Exchange");
    }
 </script>
 
 <style>
+    #toggle-button{
+        position: absolute;
+        right: 10px;
+        bottom: 15px;
+
+        background-color: lightgray;
+    }
     .grid-container{
         display: grid;
 
@@ -89,5 +114,27 @@
         display: grid;
 
         grid-template-columns: 125px auto;
+    }
+
+    .settings{
+        position: absolute;
+
+        background-color: white;
+
+        width: 75%;
+        height: 100%;
+
+    }
+    .settings_off{
+        z-index: -1;
+        left: -63%;
+
+        transition: left 1s;
+    }
+    .settings_on{
+        z-index: 5;
+        left: 0%;
+
+        transition: left 1s;
     }
 </style>
